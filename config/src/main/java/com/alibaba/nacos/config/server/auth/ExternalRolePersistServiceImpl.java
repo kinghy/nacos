@@ -164,7 +164,9 @@ public class ExternalRolePersistServiceImpl implements RolePersistService {
     
     @Override
     public List<String> findRolesLikeRoleName(String role) {
-        String sql = "SELECT role FROM roles WHERE role LIKE '%' ? '%'";
+//        String sql = "SELECT role FROM roles WHERE role LIKE '%' ? '%'";
+        // 支持postgresql与mysql
+        String sql = "SELECT role FROM roles WHERE role like '%" + role + "%'";
         List<String> users = this.jt.queryForList(sql, new String[] {role}, String.class);
         return users;
     }

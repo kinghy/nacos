@@ -103,7 +103,8 @@ public class TenantCapacityPersistService {
             PreparedStatementCreator preparedStatementCreator = new PreparedStatementCreator() {
                 @Override
                 public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+//                    PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                     String tenant = tenantCapacity.getTenant();
                     ps.setString(1, tenant);
                     ps.setInt(2, tenantCapacity.getQuota());

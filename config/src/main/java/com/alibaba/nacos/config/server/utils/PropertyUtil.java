@@ -280,9 +280,12 @@ public class PropertyUtil implements ApplicationContextInitializer<ConfigurableA
             setCorrectUsageDelay(getInt(PropertiesConstant.CORRECT_USAGE_DELAY, correctUsageDelay));
             setInitialExpansionPercent(getInt(PropertiesConstant.INITIAL_EXPANSION_PERCENT, initialExpansionPercent));
             // External data sources are used by default in cluster mode
-            setUseExternalDB(PropertiesConstant.MYSQL
-                    .equalsIgnoreCase(getString(PropertiesConstant.SPRING_DATASOURCE_PLATFORM, "")));
-            
+//            setUseExternalDB(PropertiesConstant.MYSQL
+//                    .equalsIgnoreCase(getString(PropertiesConstant.SPRING_DATASOURCE_PLATFORM, "")));
+            // 支持postgresql与mysql
+            String platfrom = getString("spring.datasource.platform", "");
+            setUseExternalDB("mysql".equalsIgnoreCase(platfrom) || "postgresql".equalsIgnoreCase(platfrom));
+
             // must initialize after setUseExternalDB
             // This value is true in stand-alone mode and false in cluster mode
             // If this value is set to true in cluster mode, nacos's distributed storage engine is turned on

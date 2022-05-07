@@ -14,6 +14,7 @@
 package com.alibaba.nacos.config.server.service.datasource;
 
 import com.alibaba.nacos.common.utils.Preconditions;
+import com.alibaba.nacos.sys.env.EnvUtil;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -35,6 +36,7 @@ import static com.alibaba.nacos.common.utils.CollectionUtils.getOrDefault;
 public class ExternalDataSourceProperties {
     
     private static final String JDBC_DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
+    private static final String POSTGRES_JDBC_DRIVER_NAME = "org.postgresql.Driver";
     
     private static final String TEST_QUERY = "SELECT 1";
     
@@ -79,7 +81,12 @@ public class ExternalDataSourceProperties {
             int currentSize = index + 1;
             Preconditions.checkArgument(url.size() >= currentSize, "db.url.%s is null", index);
             DataSourcePoolProperties poolProperties = DataSourcePoolProperties.build(environment);
-            poolProperties.setDriverClassName(JDBC_DRIVER_NAME);
+            // 支持postgresql与mysql，POSTGRES_JDBC_DRIVER_NAME为org.postgresql.Driver的常量
+            String driverClassName = JDBC_DRIVER_NAME;
+            if ("postgresql".equals(EnvUtil.getProperty("spring.datasource.platform"))) {
+                driverClassName = POSTGRES_JDBC_DRIVER_NAME;
+            }
+            poolProperties.setDriverClassName(driverClassName);
             poolProperties.setJdbcUrl(url.get(index).trim());
             poolProperties.setUsername(getOrDefault(user, index, user.get(0)).trim());
             poolProperties.setPassword(getOrDefault(password, index, password.get(0)).trim());
